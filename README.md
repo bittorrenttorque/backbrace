@@ -75,5 +75,8 @@ person.set('name', 'Patrick');
 - Support idAttribute
 - Support id changes
 
+## Feedback
+I'd love feedback. [@pwmckenna](https://twitter.com/#!/pwmckenna)
+
 <br><br>
-Special thanks to Andrew de Andrade for the inspiration!
+Special thanks to Andrew de Andrade ([@andrewdeandrade](https://twitter.com/#!/andrewdeandrade)) for the inspiration!
