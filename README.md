@@ -7,12 +7,12 @@ Backbone tends to slouch when dealing with all but the shallowest data sets. Let
 MyCollection = Backbone.Collection.extend(Backbrace.Collection) {};
 MyModel = Backbone.Model.extend(Backbrace.Model) {};
 ```
-or to apply globally...
+__or to apply globally...__
 ```js
 _.extend(Backbone.Collection, Backbrace.Collection);
 _.extend(Backbone.Model, Backbrace.Model);
 ```
-then
+__then__
 ```js
 var model = new MyModel;
 model.live('a b c d', function(e) {
