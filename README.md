@@ -12,10 +12,6 @@ __or to apply globally__
 _.extend(Backbone.Collection, Backbrace.Collection);
 _.extend(Backbone.Model, Backbrace.Model);
 ```
-__or let Backbrace handle it__
-```js
-Backbrace.attach();
-```
 __then__
 ```js
 var model = new MyModel;
