@@ -64,7 +64,11 @@ collection.live('* name', function(name) {
 collection.add(new Backbone.Model({name: 'Patrick'});
 collection.add(new Backbone.Model({name: 'Daniel'});
 collection.add(new Backbone.Model({name: 'Mary'});
-collection.add(new Backbone.Model({name: 'Robert'});
+
+//The following works too!
+var person = new Backbone.Model;
+collection.add(person);
+person.set('name', 'Robert');
 ```
 ## Todo
 - Support idAttribute
