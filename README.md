@@ -24,7 +24,7 @@ model.get('a').get('b').get('c').get('d').get('e').get('f').get('g').set('h', ne
 //Your callback was just called!
 ```
 
-This also works when intermediate objects are Collections, though the id of the model is used to match the selector, where the attribute key is used for Models.  
+This also works when intermediate objects are Collections, though the *id* of the model is used to match the selector, where the attribute key is used for Models.  
 __For instance:__
 ```js
 var model = new Backbone.Model;
