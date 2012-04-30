@@ -1,8 +1,8 @@
-#Backbrace.js
+# Backbrace.js
 
-##Why?
+## Why?
 Taller [Backbone](https://github.com/documentcloud/backbone) data sets tend to slouch. Let them stand tall and proud, by allowing for jQueryesque *.live()* calls.
-##How?
+## How?
 ```html
 <script type="text/javascript" src="backbrace.js"></script>
 ```
@@ -21,7 +21,7 @@ model.get('a').get('b').get('c').set('d', new Backbone.Model);
 ```
 
 This also works when intermediate objects are Collections, though the *id* of the model is used to match the selector, where the attribute key is used for Models.  
-__For instance:__
+__For example:__
 ```js
 var model = new Backbone.Model;
 model.live('a b c d', function(e) {
@@ -35,8 +35,25 @@ model.get('a').get('b').get('c').add(new Backbone.Model({id: 'd'}));
 
 //Your callback was just called!
 ```
-##Todo
-- Support * as part of the selector
+## Regex?
+Almost. * is supported. 
+__For example:__
+```js
+var model = new Backbone.Model;
+model.live('a * c *', function(e) {
+  console.log('I only care about d in c in b in a...and I like using collections');
+});
+
+model.set('a', new Backbone.Collection);
+model.get('a').add(new Backbone.Model({id: 'b'}));
+model.get('a').get('b').set('c', new Backbone.Collection);
+model.get('a').get('b').get('c').add(new Backbone.Model({id: 'd'}));
+model.get('a').get('b').get('c').add(new Backbone.Model({id: 'e'}));
+model.get('a').get('b').get('c').add(new Backbone.Model({id: 'f'}));
+
+//Your callback was just called...three times!
+```
+## Todo
 - Support idAttribute
 - Support id changes
 
