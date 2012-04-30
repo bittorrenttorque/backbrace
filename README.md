@@ -25,7 +25,7 @@ model.get('a').get('b').get('c').get('d').get('e').get('f').get('g').set('h', ne
 ```
 
 This also works when intermediate objects are Collections, though the id of the model is used to match the selector, where the attribute key is used for Models.  
-For instance:  
+__For instance:__
 ```js
 var model = new Backbone.Model;
 model.live('a b c d', callback);
