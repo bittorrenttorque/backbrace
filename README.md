@@ -27,6 +27,8 @@ model.get('a').get('b').get('c').get('d').get('e').get('f').get('g').set('h', ne
 This also works when intermediate objects are Collections, though the id of the model is used to match the selector, where the attribute key is used for Models.
 ##Todo
 - Support * as part of the selector
+- Support idAttribute
+- Support id changes
 
 <br><br>
 Special thanks to Andrew de Andrade for the inspiration!
