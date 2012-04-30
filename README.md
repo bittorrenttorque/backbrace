@@ -4,13 +4,13 @@
 Backbone tends to slouch when dealing with all but the shallowest data sets. Let it stand tall and proud, by allowing for jQueryesque *.live()* calls.
 ##How?
 ```js
-MyCollection = Backbone.Collection.extend(Backbrace) {};
-MyModel = Backbone.Model.extend(Backbrace) {};
+MyCollection = Backbone.Collection.extend(Backbrace.Collection) {};
+MyModel = Backbone.Model.extend(Backbrace.Model) {};
 ```
 or to apply globally...
 ```js
-_.extend(Backbone.Collection.prototype, Backbrace);
-_.extend(Backbone.Model.prototype, Backbrace);
+_.extend(Backbone.Collection.prototype, Backbrace.Collection);
+_.extend(Backbone.Model.prototype, Backbrace.Model);
 ```
 then
 ```js
