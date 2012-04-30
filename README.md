@@ -7,6 +7,11 @@ Backbone tends to slouch when dealing with all but the shallowest data sets. Let
 MyCollection = Backbone.Collection.extend(Backbrace) {};
 MyModel = Backbone.Model.extend(Backbrace) {};
 ```
+or
+```js
+_.extend(Backbone.Collection.prototype, Backbrace);
+_.extend(Backbone.Model.prototype, Backbrace);
+```
 then
 ```js
 var model = new MyModel;
