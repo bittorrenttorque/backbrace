@@ -24,7 +24,19 @@ model.get('a').get('b').get('c').get('d').get('e').get('f').get('g').set('h', ne
 //Your callback was just called!
 ```
 
-This also works when intermediate objects are Collections, though the id of the model is used to match the selector, where the attribute key is used for Models.
+This also works when intermediate objects are Collections, though the id of the model is used to match the selector, where the attribute key is used for Models.  
+For instance:  
+```js
+var model = new Backbone.Model;
+model.live('a b c d', callback);
+
+model.set('a', new Backbone.Collection);
+model.get('a').add(new Backbone.Model({id: 'b'}));
+model.get('a').get('b').set('c', new Backbone.Collection);
+model.get('a').get('b').get('c').add(new Backbone.Model({id: 'd'}));
+
+//Your callback was just called!
+```
 ##Todo
 - Support * as part of the selector
 - Support idAttribute
