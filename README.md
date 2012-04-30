@@ -7,10 +7,14 @@ Backbone tends to slouch when dealing with all but the shallowest data sets. Let
 MyCollection = Backbone.Collection.extend(Backbrace.Collection) {};
 MyModel = Backbone.Model.extend(Backbrace.Model) {};
 ```
-__or to apply globally...__
+__or to apply globally__
 ```js
 _.extend(Backbone.Collection, Backbrace.Collection);
 _.extend(Backbone.Model, Backbrace.Model);
+```
+__or let Backbrace handle it__
+```js
+Backbrace.attach();
 ```
 __then__
 ```js
