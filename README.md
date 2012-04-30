@@ -18,3 +18,5 @@ model.get('a').get('b').get('c').set('d', new Backbone.Model);
 ```
 
 This also works when intermediate objects are Collections, though the id of the model is used to match the selector, where the attribute key is used for Models.
+<br><br>
+Special thanks to Andrew de Andrade!
