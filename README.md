@@ -54,6 +54,18 @@ model.get('a').get('b').get('c').add(new Backbone.Model({id: 'f'}));
 
 //Your callback was just called...three times!
 ```
+__or for a much less contrived example:__
+```js
+var collection = new Backbone.Collection;
+collection.live('* name', function(name) {
+  console.log('Someone has the name: ' + name);
+});
+
+collection.add(new Backbone.Model({name: 'Patrick'});
+collection.add(new Backbone.Model({name: 'Daniel'});
+collection.add(new Backbone.Model({name: 'Mary'});
+collection.add(new Backbone.Model({name: 'Robert'});
+```
 ## Todo
 - Support idAttribute
 - Support id changes
