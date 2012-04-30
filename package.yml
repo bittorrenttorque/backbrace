@@ -1,0 +1,8 @@
+name: Backbrace
+fullname: Backbrace
+filename: backbrace.js
+description: Help your taller Backbone apps stand tall with ease.
+license: Public domain, http://unlicense.org
+copyright: Patrick Williams
+sources:
+  - backbrace.js
