@@ -4,8 +4,8 @@
 Backbone tends to slouch when dealing with all but the shallowest data sets. Let it stand tall and proud, by allowing for jQueryesque *.live()* calls.
 ##How?
 ```js
-MyCollection = Backbone.Collection.extend(Backbrace.Collection) {};
-MyModel = Backbone.Model.extend(Backbrace.Model) {};
+MyCollection = Backbone.Collection.extend(Backbrace) {};
+MyModel = Backbone.Model.extend(Backbrace) {};
 ```
 then
 ```js
