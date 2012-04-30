@@ -8,14 +8,18 @@ Taller Backbone data sets tend to slouch. Let them stand tall and proud, by allo
 ```
 ```js
 var model = new Backbone.Model;
-model.live('a b c d', function(e) {
-  console.log('I only care about d in c in b in a...nothing in between');
+model.live('a b c d e f g h', function(e) {
+  console.log('I only care about h in g in f in e in d in c in b in a...nothing in between');
 });
 
 model.set('a', new Backbone.Model);
 model.get('a').set('b' new Backbone.Model);
 model.get('a').get('b').set('c', new Backbone.Model);
 model.get('a').get('b').get('c').set('d', new Backbone.Model);
+model.get('a').get('b').get('c').get('d').set('e', new Backbone.Model);
+model.get('a').get('b').get('c').get('d').get('e').set('f', new Backbone.Model);
+model.get('a').get('b').get('c').get('d').get('e').get('f').set('g', new Backbone.Model);
+model.get('a').get('b').get('c').get('d').get('e').get('f').get('g').set('h', new Backbone.Model);
 
 //Your callback was just called!
 ```
