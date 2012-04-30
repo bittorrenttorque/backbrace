@@ -8,7 +8,7 @@ Taller [Backbone](https://github.com/documentcloud/backbone) data sets tend to s
 ```
 ```js
 var model = new Backbone.Model;
-var callback = function() {
+var callback = function(val) {
   console.log('I only care about d in c in b in a...nothing in between');
 };
 model.live('a b c d', callback);
