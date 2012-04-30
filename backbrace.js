@@ -9,7 +9,7 @@
             if(selectors.length > 1) {
                 var finisher = callback;
                 callback = function(elem) {
-                    var tmp = _(selectors).tail().reduce(function(memo, num) { return memo + ' ' + num; });
+                    var tmp = _(selectors).tail().reduce(function(memo, part) { return memo + ' ' + part; });
                     elem.live.call(elem, tmp, finisher);
                 };
             }
