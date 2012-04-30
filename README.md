@@ -36,7 +36,7 @@ model.get('a').get('b').get('c').add(new Backbone.Model({id: 'd'}));
 //Your callback was just called!
 ```
 ## Regex?
-Almost. * is supported. 
+Almost. * is supported.  
 __For example:__
 ```js
 var model = new Backbone.Model;
