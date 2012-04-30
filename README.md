@@ -1,4 +1,4 @@
-#Backbrace
+#Backbrace.js
 
 ##Why?
 Taller Backbone data sets tend to slouch. Let them stand tall and proud, by allowing for jQueryesque *.live()* calls.
