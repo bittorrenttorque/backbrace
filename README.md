@@ -1,7 +1,7 @@
 #Backbrace
 
 ##Why?
-Backbone tends to slouch when dealing with all but the shallowest data sets. Let it stand tall and proud, by allowing for jQueryesque *.live()* calls.
+Taller Backbone data sets tend to slouch. Let them stand tall and proud, by allowing for jQueryesque *.live()* calls.
 ##How?
 ```html
 <script type="text/javascript" src="backbrace.js"></script>
