@@ -1,37 +1,40 @@
 (function() {
     var Live = {
-        live: function(selector, callback, context) {
-            console.log('live(' + selector + ')');
+        live: function(selector, callback) {
             var selectors = jQuery.trim(selector).split(' ');
             if(selectors.length == 0) return;
-
-            console.log('selectors length: ' + selectors.length);
 
             // Detect existing matches, as well as matches that will be added.
             // The callbacks should differ depending on if this is the last selector. 
             if(selectors.length > 1) {
                 var finisher = callback;
                 callback = function(elem) {
-                    var tmp = _(selectors).tail().reduce(function(memo, num) { return memo + num + ' '; });
-                    console.log('tmp: ' + tmp);
-                    elem.live(tmp, finisher, context);
+                    var tmp = _(selectors).tail().reduce(function(memo, num) { return memo + ' ' + num; });
+                    elem.live.call(elem, tmp, finisher);
                 };
             }
 
-            var next = selectors[0];
-            console.log('next: ' + next);
-            if(this.get(next)) {
-                console.log('found next');
-                callback.call(context, this.get(next));
+            var key = _(selectors).first();
+            if(this.get(key)) {
+                callback(this.get(key));
             }
 
             // Even if it already exists, it may disappear, or match multiple not yet added objects.
-            this.on('add:' + next, callback, context);
+            if(this instanceof Backbone.Model) {
+                this.on('change:' + key, function(elem) {
+                    if(!(key in elem.previousAttributes())) {
+                        callback(this.get(key), elem);
+                    }
+                });
+            } else if(this instanceof Backbone.Collection) {
+                this.on('add', function(elem) {
+                    if(elem.id === key) {
+                        callback(this.get(key), elem);
+                    }
+                });
+            }
         }
     };
-
-    Backbrace = {
-        Model: _.extend({}, Live),
-        Collection: _.extend({}, Live)
-    };
+    _.extend(Backbone.Model.prototype, Live);
+    _.extend(Backbone.Collection.prototype, Live);
 }).call(this);
