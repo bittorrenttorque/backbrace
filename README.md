@@ -9,8 +9,8 @@ MyModel = Backbone.Model.extend(Backbrace.Model) {};
 ```
 or to apply globally...
 ```js
-_.extend(Backbone.Collection.prototype, Backbrace.Collection);
-_.extend(Backbone.Model.prototype, Backbrace.Model);
+_.extend(Backbone.Collection, Backbrace.Collection);
+_.extend(Backbone.Model, Backbrace.Model);
 ```
 then
 ```js
