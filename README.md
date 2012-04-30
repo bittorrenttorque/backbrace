@@ -1,7 +1,7 @@
 #Backbrace
 
 ##Why?
-Backbone tends to start slouching when dealing with all but the shallowest data sets. Let it stand tall and proud.  
+Backbone tends to slouch when dealing with all but the shallowest data sets. Let it stand tall and proud, by allowing for jQueryesque *.live()* calls.
 ##How?
 ```js
 _.extend(Backbone.Collection, Backbrace.Collection);  
