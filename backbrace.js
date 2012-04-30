@@ -21,14 +21,27 @@
 
             // Even if it already exists, it may disappear, or match multiple not yet added objects.
             if(this instanceof Backbone.Model) {
-                this.on('change:' + key, function(elem) {
-                    if(!(key in elem.previousAttributes())) {
-                        callback(this.get(key), elem);
-                    }
-                });
+                if(key === '*') {
+                    this.on('change', function() {
+                        //lets find all the attributes that are new
+                        var prev = elem.previousAttributes();
+                        _(elem.changedAttributes()).each(function(value, key) {
+                            if(!(key in prev)) {
+                                callback(this.get(key), elem);
+                            }
+                        });
+                    });
+                } else {
+                    this.on('change:' + key, function(elem) {
+                        var prev = elem.previousAttributes();
+                        if(!(key in prev)) {
+                            callback(this.get(key), elem);
+                        }
+                    });
+                }
             } else if(this instanceof Backbone.Collection) {
                 this.on('add', function(elem) {
-                    if(elem.id === key) {
+                    if(key === '*' || elem.id === key) {
                         callback(this.get(key), elem);
                     }
                 });
