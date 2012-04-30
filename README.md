@@ -41,7 +41,7 @@ __For example:__
 ```js
 var model = new Backbone.Model;
 model.live('a * c *', function(e) {
-  console.log('I only care about d in c in b in a...and I like using collections');
+  console.log('I care about anything called c, if its in any child attribute/model of a...and I still want to use collections');
 });
 
 model.set('a', new Backbone.Collection);
