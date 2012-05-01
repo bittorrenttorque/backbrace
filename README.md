@@ -71,6 +71,9 @@ var person = new Backbone.Model;
 collection.add(person);
 person.set('name', 'Patrick');
 ```
+## When?
+This is probably not useful if your collections just mirror flat database tables. However, if you are using something like [BitTorrent's btapp library](http://github.com/pwmckenna/btapp/), its a struggle to cleanly interact with a tree of Backbone models and collections that can grow to be quite deep. In most cases, you're only interested in the leaves of the tree, and this an attempt to simplify that experience. 
+
 ## Todo
 - Support idAttribute
 - Support id changes
