@@ -31,7 +31,7 @@
         }
     }
     function handle_model(selector, callback, context) {
-        handle_existing_attributes.call(this, selector, callback);
+        handle_existing_attributes.call(this, selector, callback, context);
         handle_future_attributes.call(this, selector, callback, context);
     }
 
@@ -55,8 +55,8 @@
         }, this);
     }
     function handle_collection(selector, callback, context) {
-        handle_existing_models.call(this, selector, callback);
-        handle_future_models.call(this, selector, callback);
+        handle_existing_models.call(this, selector, callback, context);
+        handle_future_models.call(this, selector, callback, context);
     }
 
     var Live = {
@@ -77,7 +77,6 @@
             }
 
             var selector = _(selectors).first();
-
             if(this instanceof Backbone.Model) {
                 handle_model.call(this, selector, callback, context);
             } else if(this instanceof Backbone.Collection) {
