@@ -1,7 +1,67 @@
 (function() {
+    function handle_existing_attributes(selector, callback, context) {
+        if(selector === '*') {
+            _(this.toJSON()).each(function(value, key) {
+                handle_existing_attributes.call(this, key, callback, context);
+            }, this);
+            return;
+        }
+
+        if(this.has(selector)) {
+            callback.call(context, this.get(selector));
+        }
+    }
+    function handle_future_attributes(selector, callback, context) {
+        if(selector === '*') {
+            this.on('change', function() {
+                var prev = this.previousAttributes();
+                _(this.changedAttributes()).each(function(value, key) {
+                    if(!(key in prev)) {
+                        callback.call(context, this.get(key));
+                    }
+                }, this);
+            }, this);
+        } else {
+            this.on('change:' + selector, function() {
+                var prev = this.previousAttributes();
+                if(!(selector in prev)) {
+                    callback.call(context, this.get(selector));
+                }
+            }, this);
+        }
+    }
+    function handle_model(selector, callback, context) {
+        handle_existing_attributes.call(this, selector, callback);
+        handle_future_attributes.call(this, selector, callback, context);
+    }
+
+    function handle_existing_models(selector, callback, context) {
+        if(selector === '*') {
+            this.each(function(model, id) {
+                handle_existing_models.call(this, id, callback, context);
+            }, this);
+            return;
+        }
+
+        if(this.get(selector)) {
+            callback.call(context, this.get(selector));
+        }
+    }
+    function handle_future_models(selector, callback, context) {
+        this.on('add', function(elem) {
+            if(selector === '*' || selector === elem.id) {
+                callback.call(context, elem);
+            }
+        }, this);
+    }
+    function handle_collection(selector, callback, context) {
+        handle_existing_models.call(this, selector, callback);
+        handle_future_models.call(this, selector, callback);
+    }
+
     var Live = {
-        live: function(selector, callback) {
-            var selectors = jQuery.trim(selector).split(' ');
+        live: function(input, callback, context) {
+            var selectors = jQuery.trim(input).split(' ');
             if(selectors.length == 0) return;
 
             // Detect existing matches, as well as matches that will be added.
@@ -9,42 +69,19 @@
             if(selectors.length > 1) {
                 var finisher = callback;
                 callback = function(elem) {
-                    var tmp = _(selectors).tail().reduce(function(memo, part) { return memo + ' ' + part; });
-                    elem.live.call(elem, tmp, finisher);
+                    if(elem instanceof Backbone.Model || elem instanceof Backbone.Collection) {
+                        var tmp = _(selectors).tail().reduce(function(memo, part) { return memo + ' ' + part; });
+                        elem.live.call(elem, tmp, finisher, context);
+                    }
                 };
             }
 
-            var key = _(selectors).first();
-            if(this.get(key)) {
-                callback(this.get(key));
-            }
+            var selector = _(selectors).first();
 
-            // Even if it already exists, it may disappear, or match multiple not yet added objects.
             if(this instanceof Backbone.Model) {
-                if(key === '*') {
-                    this.on('change', function() {
-                        //lets find all the attributes that are new
-                        var prev = elem.previousAttributes();
-                        _(elem.changedAttributes()).each(function(value, key) {
-                            if(!(key in prev)) {
-                                callback(this.get(key), elem);
-                            }
-                        });
-                    });
-                } else {
-                    this.on('change:' + key, function(elem) {
-                        var prev = elem.previousAttributes();
-                        if(!(key in prev)) {
-                            callback(this.get(key), elem);
-                        }
-                    });
-                }
+                handle_model.call(this, selector, callback, context);
             } else if(this instanceof Backbone.Collection) {
-                this.on('add', function(elem) {
-                    if(key === '*' || elem.id === key) {
-                        callback(this.get(key), elem);
-                    }
-                });
+                handle_collection.call(this, selector, callback, context);
             }
         }
     };
