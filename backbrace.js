@@ -66,9 +66,16 @@
 
             // Detect existing matches, as well as matches that will be added.
             // The callbacks should differ depending on if this is the last selector. 
+
+            // This is where we do a bit of "patient recursion"...replace the callback
+            // with a function that calls live on the children with the tail of the selection
+            // string...and passes along the original callback so that it will be called when 
+            // an attribute/model matches the final selector token.
             if(selectors.length > 1) {
                 var finisher = callback;
                 callback = function(elem) {
+                    // Check if the argument passed to the callback is a Backbone object. If not, 
+                    // then it obviously won't have any children that match our selector.
                     if(elem instanceof Backbone.Model || elem instanceof Backbone.Collection) {
                         var tmp = _(selectors).tail().reduce(function(memo, part) { return memo + ' ' + part; });
                         elem.live.call(elem, tmp, finisher, context);

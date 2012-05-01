@@ -154,5 +154,43 @@
 				expect(callback).not.toHaveBeenCalled();
 			});
 		});
+		it('calls a callback for purely model selector with the correct context', function() {
+			runs(function() {
+				var context = 'hi i am a context';
+				var spy = jasmine.createSpy();
+				var callback = function() {
+					expect(this === context);
+					spy();
+				};
+				var model = new Backbone.Model;
+
+				model.set('a', new Backbone.Model);
+				model.get('a').set('b', new Backbone.Model);
+				model.get('a').get('b').set('c', new Backbone.Model);
+				model.get('a').get('b').get('c').set('d', new Backbone.Model);
+
+				model.live('a b c d', callback, context);
+				expect(spy).toHaveBeenCalled();
+			});
+		});
+		it('calls a callback for mixed model/collection selector with the correct context', function() {
+			runs(function() {
+				var context = 'hi i am a context';
+				var spy = jasmine.createSpy();
+				var callback = function() {
+					expect(this === context);
+					spy();
+				};
+				var model = new Backbone.Model;
+				model.live('a b c d', callback, context);
+
+				model.set('a', new Backbone.Collection);
+				model.get('a').add(new Backbone.Model({id: 'b'}));
+				model.get('a').get('b').set('c', new Backbone.Collection);
+				model.get('a').get('b').get('c').add(new Backbone.Model({id: 'd'}));
+
+				expect(spy).toHaveBeenCalled();
+			});
+		});		
 	});
 }).call(this);
