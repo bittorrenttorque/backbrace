@@ -79,7 +79,7 @@ To borrow an example, imagine a root object, that has a collection of torrents, 
 ```js
 var btapp = new Btapp;
 btapp.live('torrent * file * properties', function(properties) {
-  var view = new FilePropertiesView({model: file});
+  var view = new FilePropertiesView({model: properties});
   $('#files').append(view.render().el);
 });
 ```
