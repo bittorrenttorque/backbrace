@@ -1,8 +1,0 @@
-name: Backbrace
-fullname: Backbrace.js
-filename: backbrace.min.js
-description: Can this framework be the one?
-license: MIT license
-copyright: Patrick Williams
-sources:
-  - Source/backbrace.min.js
