@@ -1,0 +1,7 @@
+before_script: 
+  - "git submodule update --init"
+  - "bin/compile_for_test.sh"
+  - "sh -e /etc/init.d/xvfb start"
+script: "sh -c 'cd Dependencies/lsd-specs && DISPLAY=:99.0 bundle exec rake jasmine:headless'"
+rvm:
+  - 1.9.2
