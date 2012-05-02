@@ -1,4 +1,12 @@
+// Backbrace.js 0.1.0
+
+// (c) 2012 Patrick Williams
+// Backbrace may be freely distributed under the MIT license.
+// For all details and documentation:
+// http://pwmckenna.github.com/backbrace
+
 (function() {
+    // Backbone.Model specific functionality
     function handle_existing_attributes(selector, callback, context) {
         if(selector === '*') {
             _(this.toJSON()).each(function(value, key) {
@@ -35,6 +43,7 @@
         handle_future_attributes.call(this, selector, callback, context);
     }
 
+    // Backbone.Collection specific functionality
     function handle_existing_models(selector, callback, context) {
         if(selector === '*') {
             this.each(function(model, id) {
@@ -59,6 +68,8 @@
         handle_future_models.call(this, selector, callback, context);
     }
 
+    // Generic functionality for Backbone Models/Collections
+    // The 'live' function should be the only externally visible portion of this library.
     var Live = {
         live: function(input, callback, context) {
             var selectors = jQuery.trim(input).split(' ');
@@ -91,6 +102,8 @@
             }
         }
     };
+
+    // Attach the 'live' function
     _.extend(Backbone.Model.prototype, Live);
     _.extend(Backbone.Collection.prototype, Live);
 }).call(this);
