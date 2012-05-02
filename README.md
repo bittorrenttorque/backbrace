@@ -84,7 +84,7 @@ btapp.live('torrent * file * properties', function(properties) {
 });
 ```
 ## Testing
-[![Build Status](https://secure.travis-ci.org/pwmckenna/backbrace.png?branch=master)](http://travis-ci.org/pwmckenna/backbrace)
+[![Build Status](https://secure.travis-ci.org/pwmckenna/backbrace.png?branch=master)](http://travis-ci.org/pwmckenna/backbrace)  
 To run the test suite yourself, open tests/SpecRunner.html in a browser.  
 
 ## Todo
