@@ -75,7 +75,7 @@ person.set('name', 'Patrick');
 This is probably not useful if your collections just mirror flat database tables. However, if you are using something like [BitTorrent's btapp library](http://github.com/pwmckenna/btapp/), it tends to be a struggle to cleanly interact with a tree of Backbone models and collections that grows to be quite deep. In most cases, you're only interested in the leaves of the tree, and this is an attempt to simplify that experience.  
 
 
-To borrow an example from the [aforementioned btapp library](http://github.com/pwmckenna/btapp/), imagine a root object, that has a collection of torrents, which each contain a list of files, which have a properties attribute, which itself is chocked full of key value pairs. If we wanted a simple way to create a Backbone.View for each of these files, we might do the following:
+To borrow an example from the [aforementioned btapp library](http://github.com/pwmckenna/btapp/), imagine a root object, that has a collection of torrents, which each contain a list of files, which have a properties attribute, which itself is chocked full of key value pairs. If we wanted a simple way to create a Backbone.View for each of these files' properties objects, we might do the following:
 ```js
 var btapp = new Btapp;
 btapp.live('torrent * file * properties', function(properties) {
