@@ -1,0 +1,187 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Backbrace by pwmckenna</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Backbrace</h1>
+        <p>Give your backbone app some support when dealing with tall trees of data.</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/pwmckenna/backbrace" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/pwmckenna/backbrace/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/pwmckenna/backbrace/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>Backbrace.js</h1>
+
+<h2>Why?</h2>
+
+<p>Taller <a href="https://github.com/documentcloud/backbone">Backbone</a> data sets tend to slouch. Let them stand tall and proud, by allowing for jQueryesque <em>.live()</em> calls.</p>
+
+<h2>How?</h2>
+
+<div class="highlight">
+<pre><span class="c">&lt;!-- http://github.com/pwmckenna/backbrace/ --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"backbrace.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre>
+</div>
+
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">model</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">callback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'I only care about d in c in b in a...nothing in between'</span><span class="p">);</span>
+<span class="p">};</span>
+<span class="nx">model</span><span class="p">.</span><span class="nx">live</span><span class="p">(</span><span class="s1">'a b c d'</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
+
+<span class="nx">model</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">);</span>
+<span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nx">set</span><span class="p">(</span><span class="s1">'b'</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">);</span>
+<span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">'b'</span><span class="p">).</span><span class="nx">set</span><span class="p">(</span><span class="s1">'c'</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">);</span>
+<span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">'b'</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">'c'</span><span class="p">).</span><span class="nx">set</span><span class="p">(</span><span class="s1">'d'</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">);</span>
+
+<span class="c1">//Your callback was just called!</span>
+</pre>
+</div>
+
+
+<p>This also works when intermediate objects are Collections, though the <em>id</em> of the model is used to match the selector, where the attribute key is used for Models.<br><strong>For example:</strong></p>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">model</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">;</span>
+<span class="nx">model</span><span class="p">.</span><span class="nx">live</span><span class="p">(</span><span class="s1">'a b c d'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'I only care about d in c in b in a...and I like using collections'</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">model</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">);</span>
+<span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="s1">'b'</span><span class="p">}));</span>
+<span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">'b'</span><span class="p">).</span><span class="nx">set</span><span class="p">(</span><span class="s1">'c'</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">);</span>
+<span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">'b'</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">'c'</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="s1">'d'</span><span class="p">}));</span>
+
+<span class="c1">//Your callback was just called!</span>
+</pre>
+</div>
+
+
+<h2>Regex?</h2>
+
+<p>Almost. * is supported.<br><strong>For example:</strong></p>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">model</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">;</span>
+<span class="nx">model</span><span class="p">.</span><span class="nx">live</span><span class="p">(</span><span class="s1">'a * c *'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'I care about anything called c, if its in any child attribute/model of a...and I still want to use collections'</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">model</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">);</span>
+<span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="s1">'b'</span><span class="p">}));</span>
+<span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">'b'</span><span class="p">).</span><span class="nx">set</span><span class="p">(</span><span class="s1">'c'</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">);</span>
+<span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">'b'</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">'c'</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="s1">'d'</span><span class="p">}));</span>
+<span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">'b'</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">'c'</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="s1">'e'</span><span class="p">}));</span>
+<span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'a'</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">'b'</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="s1">'c'</span><span class="p">).</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="s1">'f'</span><span class="p">}));</span>
+
+<span class="c1">//Your callback was just called...three times!</span>
+</pre>
+</div>
+
+
+<p><strong>or for a much less contrived example:</strong></p>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">collection</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">;</span>
+<span class="nx">collection</span><span class="p">.</span><span class="nx">live</span><span class="p">(</span><span class="s1">'* name'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Someone has the name: '</span> <span class="o">+</span> <span class="nx">name</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">collection</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span> <span class="s1">'Daniel'</span><span class="p">}));</span>
+<span class="nx">collection</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span> <span class="s1">'Robert'</span><span class="p">}));</span>
+<span class="nx">collection</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span> <span class="s1">'Mary'</span><span class="p">}));</span>
+
+<span class="c1">//The following works too!</span>
+<span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">;</span>
+<span class="nx">collection</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">person</span><span class="p">);</span>
+<span class="nx">person</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'Patrick'</span><span class="p">);</span>
+</pre>
+</div>
+
+
+<h2>When?</h2>
+
+<p>This is probably not useful if your collections just mirror flat database tables. However, if you are using something like <a href="http://github.com/pwmckenna/btapp/">BitTorrent's btapp library</a>, it tends to be a struggle to cleanly interact with a tree of Backbone models and collections that grows to be quite deep. In most cases, you're only interested in the leaves of the tree, and this is an attempt to simplify that experience.  </p>
+
+<p>To borrow an example from the <a href="http://github.com/pwmckenna/btapp/">aforementioned btapp library</a>, imagine a root object, that has a collection of torrents, which each contain a list of files, which have a properties attribute, which itself is chocked full of key value pairs. If we wanted a simple way to create a Backbone.View for each of these files' properties objects, we might do the following:</p>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">btapp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Btapp</span><span class="p">;</span>
+<span class="nx">btapp</span><span class="p">.</span><span class="nx">live</span><span class="p">(</span><span class="s1">'torrent * file * properties'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">properties</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">view</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FilePropertiesView</span><span class="p">({</span><span class="nx">model</span><span class="o">:</span> <span class="nx">properties</span><span class="p">});</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s1">'#files'</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">view</span><span class="p">.</span><span class="nx">render</span><span class="p">().</span><span class="nx">el</span><span class="p">);</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h2>Testing</h2>
+
+<p><img src="https://secure.travis-ci.org/pwmckenna/backbrace.png" alt="travis"><br>
+Tests are written using <a href="https://github.com/pivotal/jasmine">jasmine</a>.<br>
+Continuous Integration provided by <a href="http://travis-ci.org/#!/pwmckenna/backbrace">Travis CI</a>...Thanks guys!<br>
+To run the test suite yourself, open <em>spec/SpecRunner.html</em> in a browser.  </p>
+
+<h2>Todo</h2>
+
+<ul>
+<li>Support idAttribute</li>
+<li>Support id changes</li>
+</ul><h2>Feedback</h2>
+
+<p>I'd love feedback. <a href="https://twitter.com/#!/pwmckenna">@pwmckenna</a></p>
+
+<p><br><br>
+Special thanks to Andrew de Andrade (<a href="https://twitter.com/#!/andrewdeandrade">@andrewdeandrade</a>) for the inspiration!</p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/pwmckenna">pwmckenna</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-31306748-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
