@@ -11,7 +11,11 @@
 #   - dist/**/*.js
 #
 src_files:
-    - javascripts/**/*.js
+   - spec/javascripts/lib/jquery.js
+   - spec/javascripts/lib/json2.js
+   - spec/javascripts/lib/underscore.js
+   - spec/javascripts/lib/backbone.js
+   - backbrace.js
 
 # stylesheets
 #
