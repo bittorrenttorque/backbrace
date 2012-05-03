@@ -84,8 +84,9 @@ btapp.live('torrent * file * properties', function(properties) {
 });
 ```
 ## Testing
+![https://secure.travis-ci.org/pwmckenna/backbrace.png]  
 Tests are written using [jasmine](https://github.com/pivotal/jasmine).  
-To run the test suite yourself, open tests/SpecRunner.html in a browser.  
+To run the test suite yourself, open spec/SpecRunner.html in a browser.  
 
 ## Todo
 - Support idAttribute
