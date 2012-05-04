@@ -46,8 +46,8 @@
     // Backbone.Collection specific functionality
     function handle_existing_models(selector, callback, context) {
         if(selector === '*') {
-            this.each(function(model, id) {
-                handle_existing_models.call(this, id, callback, context);
+            this.each(function(model) {
+                handle_existing_models.call(this, model.id, callback, context);
             }, this);
             return;
         }
