@@ -4,7 +4,9 @@
 Taller [Backbone](https://github.com/documentcloud/backbone) data sets tend to slouch. Let them stand tall and proud, by allowing for jQueryesque *.live()* calls.
 ## How?
 ```html
-<!-- http://github.com/pwmckenna/backbrace/ -->
+<!-- Make sure the dependencies are loaded before backbrace -->
+<script type="text/javascript" src="underscore.js"></script>
+<script type="text/javascript" src="backbone.js"></script>
 <script type="text/javascript" src="backbrace.js"></script>
 ```
 ```js
