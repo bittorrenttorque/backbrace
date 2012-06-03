@@ -95,6 +95,13 @@ To run the test suite yourself, open *spec/SpecRunner.html* in a browser.
 ## Todo
 - Support idAttribute
 - Support id changes
+- Pass every object in the ancestory tree to the callback, so that you have each object that matched a part of the filter...ie:  
+
+```js
+btapp.live('torrent * file * properties', function(properties, file, files, torrent, torrents) {  
+  //This can be used as a poor man's sql WHERE conditional  
+});  
+```
 
 ## Feedback
 I'd love feedback. [@pwmckenna](https://twitter.com/#!/pwmckenna)
