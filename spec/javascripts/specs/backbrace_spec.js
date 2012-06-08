@@ -127,16 +127,21 @@
 			var collection = new Backbone.Collection;
 			collection.live('* name', callback);
 
-			collection.add(new Backbone.Model({name: 'Daniel'}));
-			expect(callback).toHaveBeenCalledWith('Daniel');	
+			var daniel = new Backbone.Model({name: 'Daniel'});
+			collection.add(daniel);
+			expect(callback).toHaveBeenCalledWith('Daniel', daniel);	
 
-			collection.add(new Backbone.Model({name: 'Robert'}));
-			expect(callback).toHaveBeenCalledWith('Robert');	
-			collection.add(new Backbone.Model({name: 'Mary'}));
-			expect(callback).toHaveBeenCalledWith('Mary');	
+			var robert = new Backbone.Model({name: 'Robert'});
+			collection.add(robert);
+			expect(callback).toHaveBeenCalledWith('Robert', robert);
+
+			var mary = new Backbone.Model({name: 'Mary'});
+			collection.add(mary);
+			expect(callback).toHaveBeenCalledWith('Mary', mary);
+
 			expect(callback.callCount).toEqual(3);
 			//The following works too!
-			var person = new Backbone.Model;
+			var person = new Backbone.Model();
 			collection.add(person);
 			person.set('name', 'Patrick');
 			expect(callback.callCount).toEqual(4);
@@ -190,6 +195,25 @@
 				model.get('a').get('b').get('c').add(new Backbone.Model({id: 'd'}));
 
 				expect(spy).toHaveBeenCalled();
+			});
+		});		
+		it('calls a callback for mixed model/collection selector with the correct tree of objects', function() {
+			runs(function() {
+				var context = 'hi i am a context';
+				var spy = jasmine.createSpy();
+				var model = new Backbone.Model;
+				model.live('a b c d', spy, context);
+
+				var a = new Backbone.Collection;
+				var b = new Backbone.Model({id: 'b'});
+				var c = new Backbone.Collection;
+				var d = new Backbone.Model({id: 'd'});
+				model.set('a', a);
+				model.get('a').add(b);
+				model.get('a').get('b').set('c', c);
+				model.get('a').get('b').get('c').add(d);
+
+				expect(spy).toHaveBeenCalledWith(d, c, b, a);
 			});
 		});		
 	});
