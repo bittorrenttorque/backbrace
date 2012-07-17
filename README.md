@@ -85,6 +85,27 @@ btapp.live('torrent * file * properties', function(properties) {
   $('#files').append(view.render().el);
 });
 ```
+
+## Callback arguments
+Every value that matches the filter is passed as an argument, in reverse order. In most cases its just the last value that you'd be interested, but sometimes its nice to know where you came from.
+
+```js
+var families = new Backbone.Collection;
+var family = new Backbone.Model({id: 'Marrah/Williams'});
+var members = new Backbone.Collection;
+
+members.add(new Backbone.Model({name: 'Daniel'}));
+members.add(new Backbone.Model({name: 'Robert'}));
+members.add(new Backbone.Model({name: 'Mary'}));
+members.add(new Backbone.Model({name: 'Patrick'}));
+family.set({members: members});
+families.add(family);
+
+families.live('* members * name', function(name, member, members, family) {
+  //what to do with all this info?!
+});
+```
+
 ## Testing
 Tests are written using [jasmine](https://github.com/pivotal/jasmine).  
 Continuous Integration provided by [Travis CI](http://travis-ci.org/#!/pwmckenna/backbrace)...Thanks guys!  
