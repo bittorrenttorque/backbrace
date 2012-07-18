@@ -9,27 +9,10 @@ Taller [Backbone](https://github.com/documentcloud/backbone) data sets tend to s
 <script type="text/javascript" src="backbone.js"></script>
 <script type="text/javascript" src="backbrace.js"></script>
 ```
+The first argument is a space deliminated string of attribute keys in models, or model ids in collections. The callback will be called when there is a new instance of the final matching selector.
 ```js
 var model = new Backbone.Model;
-var callback = function(val) {
-  console.log('I only care about d in c in b in a...nothing in between');
-};
-model.live('a b c d', callback);
-
-model.set('a', new Backbone.Model);
-model.get('a').set('b' new Backbone.Model);
-model.get('a').get('b').set('c', new Backbone.Model);
-model.get('a').get('b').get('c').set('d', new Backbone.Model);
-
-//Your callback was just called!
-```
-
-This also works when intermediate objects are Collections, though the *id* of the model is used to match the selector, where the attribute key is used for Models.  
-__For example:__
-```js
-var model = new Backbone.Model;
-model.live('a b c d', function(e) {
-  console.log('I only care about d in c in b in a...and I like using collections');
+model.live('a b c d', function(d) {
 });
 
 model.set('a', new Backbone.Collection);
@@ -105,6 +88,20 @@ families.live('* members * name', function(name, member, members, family) {
   //what to do with all this info?!
 });
 ```
+## Die
+The *die* function is to *live*, what *off* is to *on*. Call it with the same selector, callback, and context, and your callback won't be called again.
+```js
+var model = new Backbone.Model;
+var cb = function(d) {};
+model.live('a *', cb, this);
+
+model.set('a', new Backbone.Collection);
+model.get('a').add(new Backbone.Model({id: 'b'}));
+//callback called
+model.die('a b', cb, this);
+model.get('a').add(new Backbone.Model({id: 'c'}));
+//callback not called
+```
 
 ## Testing
 Tests are written using [jasmine](https://github.com/pivotal/jasmine).  
@@ -115,7 +112,6 @@ To run the test suite yourself, open *spec/SpecRunner.html* in a browser.
 ## Todo
 - Support idAttribute
 - Support id changes
-- Support die calls to undo the callbacks...this could get hairy...
 
 ## Feedback
 I'd love feedback. [@pwmckenna](https://twitter.com/#!/pwmckenna)
