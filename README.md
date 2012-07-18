@@ -70,7 +70,7 @@ btapp.live('torrent * file * properties', function(properties) {
 ```
 
 ## Callback arguments
-Every value that matches the filter is passed as an argument, in reverse order. In most cases its just the last value that you'd be interested, but sometimes its nice to know where you came from.
+Every value that matches the filter is passed as an argument, in reverse order. In most cases its just the last value that you'd be interested in, but sometimes its nice to know where you came from.
 
 ```js
 var families = new Backbone.Collection;
