@@ -6,17 +6,34 @@
 // http://pwmckenna.github.com/backbrace
 
 (function() {
+    var DELIMITER = ' ';
+
+    function initial_selector(selectors) {
+        var tokens = selectors.split(DELIMITER);
+        return _.first(tokens);
+    }
+
+    function remaining_selector(selectors) {
+        var tokens = selectors.split(DELIMITER);
+        var remaining = null;
+        if(tokens.length > 1) {
+            remaining = _.chain(tokens).rest().reduce(function(memo, token) {
+                return memo ? memo + ' ' + token : token;
+            }).value();
+        }
+        return remaining;        
+    }
     /**
-        @param rest - the attribute keys/model ids left to match
+        @param tokens - the attribute keys/model ids to match
         @param callback - the final callback that the user provided
         @param context - the context to be provided for the user provided callback
         @param matching - the values that have matched thus far
-        @param obj - the value that matched our previous "first" key
+        @param child - the value that matched our previous "first" key
     **/
-    function intermediate_callback(rest, callback, context, matching, obj) {
+    function intermediate_callback(rest, callback, context, matching, child) {
         var m = _.clone(matching || []);
-        m.unshift(obj);
-        rest && obj && typeof obj.live !== 'undefined' && obj.live(rest, callback, context, m);
+        m.unshift(child);
+        rest && child && typeof child.live !== 'undefined' && child.live(rest, callback, context, m);
         !rest && callback.apply(context, m);
     }
 
@@ -31,19 +48,8 @@
         **/
         live: function(selectors, callback, context, matching) {
             var _this = this;
-            var tokens = selectors.split(' ');
-
-            var first = null;
-            if(tokens.length > 0) {
-                first = _.first(tokens);
-            }
-
-            var rest = null;
-            if(tokens.length > 1) {
-                rest = _.chain(tokens).rest().reduce(function(memo, token) {
-                    return memo ? memo + ' ' + token : token;
-                }).value();
-            }
+            var first = initial_selector(selectors);
+            var rest = remaining_selector(selectors);
 
             var intermediate = _.bind(intermediate_callback, this, rest, callback, context, matching);
             if(first === '*') {
@@ -85,19 +91,8 @@
         **/
         live: function(selectors, callback, context, matching) {
             var _this = this;
-            var tokens = selectors.split(' ');
-
-            var first = null;
-            if(tokens.length > 0) {
-                first = _.first(tokens);
-            }
-
-            var rest = null;
-            if(tokens.length > 1) {
-                rest = _.chain(tokens).rest().reduce(function(memo, token) { 
-                    return memo ? memo + ' ' + token : token;
-                }).value();
-            }
+            var first = initial_selector(selectors);
+            var rest = remaining_selector(selectors);
 
             var intermediate = _.bind(intermediate_callback, this, rest, callback, context, matching);
             if(first === '*') {
