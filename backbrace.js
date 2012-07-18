@@ -108,9 +108,9 @@
                     call_for_matching(function(value) {
                         value.die(rest, dcallback, dcontext, extend_array(dmatching, value))
                     });
+                    this.off(event_name, event_callback, this);
+                    this.off('backbrace:die:' + selectors, die, this);
                 }
-                this.off(event_name, event_callback, this);
-                this.off('backbrace:die:' + selectors, die, this);
             }
             _this.on('backbrace:die:' + selectors, die, _this);
         },
@@ -178,9 +178,9 @@
                     call_for_matching(function(value) {
                         value.die(rest, dcallback, dcontext, extend_array(dmatching, value));
                     });
+                    this.off(event_name, event_callback, this);
+                    this.off('backbrace:die:' + selectors, die, this);
                 }
-                this.off(event_name, event_callback, this);
-                this.off('backbrace:die:' + selectors, die, this);
             }
             _this.on('backbrace:die:' + selectors, die, _this);
         },
