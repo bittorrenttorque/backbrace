@@ -28,7 +28,6 @@ __For example:__
 ```js
 var model = new Backbone.Model;
 model.live('a * c *', function(e) {
-  console.log('I care about anything called c, if its in any child attribute/model of a...and I still want to use collections');
 });
 
 model.set('a', new Backbone.Collection);
@@ -92,7 +91,7 @@ families.live('* members * name', function(name, member, members, family) {
 The *die* function is to *live*, what *off* is to *on*. Call it with the same selector, callback, and context, and your callback won't be called again.
 ```js
 var model = new Backbone.Model;
-var cb = function(d) {};
+var cb = function(x, a) {};
 model.live('a *', cb, this);
 
 model.set('a', new Backbone.Collection);
