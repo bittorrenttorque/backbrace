@@ -222,7 +222,81 @@
 
 					expect(spy).toHaveBeenCalledWith(d, c, b, a);
 				});
-			});			
+			});
+			it('calls the callback for the tree (collection - > model) and * the correct number of times', function() {
+				runs(function() {
+					var btapp = new Backbone.Collection;
+					spy = jasmine.createSpy();
+					btapp.live('*', spy);
+
+					for(var i = 0; i < 5; i++) {
+						var torrent = new Backbone.Model;
+						btapp.add(torrent);
+					}
+
+					expect(spy.callCount).toEqual(5);
+				});
+			});
+			it('calls the callback for the tree (model -> collection -> model) and * the correct number of times', function() {
+				runs(function() {
+					var btapp = new Backbone.Model;
+					spy = jasmine.createSpy();
+					btapp.live('torrent *', spy);
+
+					var torrent_list = new Backbone.Collection;
+					for(var i = 0; i < 5; i++) {
+						var torrent = new Backbone.Model;
+						torrent_list.add(torrent);
+					}
+					btapp.set({torrent: torrent_list});
+
+					expect(spy.callCount).toEqual(5);
+				});
+			});
+			it('calls the callback for the tree (model -> collection -> model -> model) and * the correct number of times', function() {
+				runs(function() {
+					var btapp = new Backbone.Model;
+					spy = jasmine.createSpy();
+					btapp.live('torrent * properties', spy);
+
+					var torrent_list = new Backbone.Collection;
+					for(var i = 0; i < 5; i++) {
+						var torrent = new Backbone.Model;
+						var properties = new Backbone.Model;
+						torrent.set({properties: properties});
+						torrent_list.add(torrent);
+					}
+					btapp.set({torrent: torrent_list});
+
+					expect(spy.callCount).toEqual(5);
+				});
+			});
+			it('calls the callback for the tree (model -> collection -> model -> collection -> model -> model) and * the correct number of times', function() {
+				runs(function() {
+					var btapp = new Backbone.Model;
+					spy = jasmine.createSpy();
+					btapp.live('torrent * file * properties', spy);
+
+					var torrent_list = new Backbone.Collection;
+					for(var i = 0; i < 5; i++) {
+						var torrent = new Backbone.Model;
+						var file_list = new Backbone.Collection();
+						for(var j = 0; j < 5; j++) {
+							var file = new Backbone.Model;
+							var properties = new Backbone.Model;
+
+							file.set({properties: properties});
+							file_list.add(file);
+						}
+
+						torrent.set({file: file_list});
+						torrent_list.add(torrent);
+					}
+					btapp.set({torrent: torrent_list});
+
+					expect(spy.callCount).toEqual(25);
+				});
+			});
 		});
 		describe('Die Tests', function() {
 			it('makes die available on Backbone.Models', function() {

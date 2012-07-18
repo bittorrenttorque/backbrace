@@ -75,12 +75,6 @@
             }
             call_for_matching(intermediate);
 
-            if(first === '*') {
-                _this.each(intermediate);
-            } else if(_this.get(first)) {
-                intermediate(_this.get(first));
-            }
-
             var event_name, event_callback;
             if(first === '*') {
                 event_name = 'add';
