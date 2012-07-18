@@ -24,7 +24,7 @@
         return remaining;        
     }
 
-    function extend_matching(matching, child) {
+    function extend_array(matching, child) {
         var m = _.clone(matching || []);
         m.unshift(child);
         return m;
@@ -47,8 +47,8 @@
         @param child - the value that matched our previous "first" key
     **/
     function intermediate_callback(rest, callback, context, matching, child) {
-        rest && child && typeof child.live !== 'undefined' && child.live(rest, callback, context, extend_matching(matching, child));
-        !rest && callback.apply(context, extend_matching(matching, child));
+        rest && child && typeof child.live !== 'undefined' && child.live(rest, callback, context, extend_array(matching, child));
+        !rest && callback.apply(context, extend_array(matching, child));
     }
 
     _.extend(Backbone.Collection.prototype, {
@@ -106,7 +106,7 @@
                 ) {
                     console.log(dmatching, matching);
                     call_for_matching(function(value) {
-                        value.die(rest, dcallback, dcontext, extend_matching(dmatching, value))
+                        value.die(rest, dcallback, dcontext, extend_array(dmatching, value))
                     });
                 }
                 this.off(event_name, event_callback, this);
@@ -165,7 +165,7 @@
             }
 
             //this is the only bound event on the object.
-            //die needs only ca lean this callback up
+            //die needs only clean this callback up
             _this.on(event_name, event_callback, _this);
             var die;
             die = function(dselectors, dcallback, dcontext, dmatching) {
@@ -176,7 +176,7 @@
                 ) {
                     console.log(dmatching, matching);
                     call_for_matching(function(value) {
-                        value.die(rest, dcallback, dcontext, extend_matching(dmatching, value));
+                        value.die(rest, dcallback, dcontext, extend_array(dmatching, value));
                     });
                 }
                 this.off(event_name, event_callback, this);
