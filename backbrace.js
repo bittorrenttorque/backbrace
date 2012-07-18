@@ -23,6 +23,22 @@
         }
         return remaining;        
     }
+
+    function extend_matching(matching, child) {
+        var m = _.clone(matching || []);
+        m.unshift(child);
+        return m;
+    }
+
+    function arrays_equal(a, b) {
+        var c = a || [];
+        var d = b || [];
+        if(c.length !== d.length) return false;
+        for(var i = 0; i < c.length && i < d.length; i++) {
+            if(c[i] !== d[i]) return false;
+        }
+        return true;
+    }
     /**
         @param tokens - the attribute keys/model ids to match
         @param callback - the final callback that the user provided
@@ -31,10 +47,8 @@
         @param child - the value that matched our previous "first" key
     **/
     function intermediate_callback(rest, callback, context, matching, child) {
-        var m = _.clone(matching || []);
-        m.unshift(child);
-        rest && child && typeof child.live !== 'undefined' && child.live(rest, callback, context, m);
-        !rest && callback.apply(context, m);
+        rest && child && typeof child.live !== 'undefined' && child.live(rest, callback, context, extend_matching(matching, child));
+        !rest && callback.apply(context, extend_matching(matching, child));
     }
 
     _.extend(Backbone.Collection.prototype, {
@@ -84,15 +98,16 @@
             //die needs only clean this callback up
             _this.on(event_name, event_callback, _this);
             var die;
-            die = function(dselectors, dcallback, dcontext) {
+            die = function(dselectors, dcallback, dcontext, dmatching) {
                 if( dselectors === selectors && 
                     dcallback === callback && 
-                    dcontext === context
+                    dcontext === context &&
+                    arrays_equal(dmatching, matching)
                 ) {
+                    console.log(dmatching, matching);
                     call_for_matching(function(value) {
-                        value.die(rest, dcallback, dcontext)
+                        value.die(rest, dcallback, dcontext, extend_matching(dmatching, value))
                     });
-                    console.log('matching!');
                 }
                 this.off(event_name, event_callback, this);
                 this.off('backbrace:die:' + selectors, die, this);
@@ -100,8 +115,8 @@
             _this.on('backbrace:die:' + selectors, die, _this);
         },
 
-        die: function(dselectors, dcallback, dcontext) {
-            this.trigger('backbrace:die:' + dselectors, dselectors, dcallback, dcontext);
+        die: function(dselectors, dcallback, dcontext, dmatching) {
+            this.trigger('backbrace:die:' + dselectors, dselectors, dcallback, dcontext, dmatching);
         }
     });
 
@@ -153,15 +168,16 @@
             //die needs only ca lean this callback up
             _this.on(event_name, event_callback, _this);
             var die;
-            die = function(dselectors, dcallback, dcontext) {
+            die = function(dselectors, dcallback, dcontext, dmatching) {
                 if( dselectors === selectors && 
                     dcallback === callback && 
-                    dcontext === context
+                    dcontext === context &&
+                    arrays_equal(dmatching, matching)
                 ) {
+                    console.log(dmatching, matching);
                     call_for_matching(function(value) {
-                        value.die(rest, dcallback, dcontext)
+                        value.die(rest, dcallback, dcontext, extend_matching(dmatching, value));
                     });
-                    console.log('matching!');
                 }
                 this.off(event_name, event_callback, this);
                 this.off('backbrace:die:' + selectors, die, this);
@@ -169,8 +185,8 @@
             _this.on('backbrace:die:' + selectors, die, _this);
         },
 
-        die: function(dselectors, dcallback, dcontext) {
-            this.trigger('backbrace:die:' + dselectors, dselectors, dcallback, dcontext);
+        die: function(dselectors, dcallback, dcontext, dmatching) {
+            this.trigger('backbrace:die:' + dselectors, dselectors, dcallback, dcontext, dmatching);
         }
     });
 }).call(this);
