@@ -52,11 +52,10 @@
                 intermediate(_this.get(first));
             }
 
-            var event_name, event_callback, event_context;
+            var event_name, event_callback;
             if(first === '*') {
                 event_name = 'add';
                 event_callback = intermediate;
-                event_context = _this;
             } else {
                 event_name = 'add';
                 event_callback = function(model) {
@@ -64,11 +63,10 @@
                         intermediate(model);
                     }
                 };
-                event_context = _this;
             }
             //this is the only bound event on the object.
             //die needs only clean this callback up
-            _this.on(event_name, event_callback, event_context);
+            _this.on(event_name, event_callback, _this);
         },
 
         die: function(selectors, callback, context) {
@@ -108,7 +106,7 @@
                 intermediate(_this.get(first));
             }
 
-            var event_name, event_callback, event_context;
+            var event_name, event_callback;
             if(first === '*') {
                 event_name = 'change';
                 event_callback = function() {
@@ -116,8 +114,7 @@
                         if(typeof _this.previous(key) === 'undefined') 
                             intermediate(value);
                     });
-                };
-                event_context = _this;
+                }
             } else {
                 event_name = 'change:' + first;
                 event_callback = function() {
@@ -126,13 +123,12 @@
                         var value = _this.get(first);
                         intermediate(value);
                     }
-                };
-                event_context = _this;
+                }
             }
 
             //this is the only bound event on the object.
             //die needs only clean this callback up
-            _this.on(event_name, event_callback, event_context);
+            _this.on(event_name, event_callback, _this);
         },
 
         die: function(selectors, callback, context) {
