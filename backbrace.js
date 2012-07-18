@@ -52,6 +52,15 @@
             var rest = remaining_selector(selectors);
 
             var intermediate = _.bind(intermediate_callback, this, rest, callback, context, matching);
+            var call_for_matching = function(fn) {
+                if(first === '*') {
+                    _this.each(fn);
+                } else if(_this.get(first)) {
+                    fn(_this.get(first));
+                }
+            }
+            call_for_matching(intermediate);
+
             if(first === '*') {
                 _this.each(intermediate);
             } else if(_this.get(first)) {
@@ -70,13 +79,29 @@
                     }
                 };
             }
+
             //this is the only bound event on the object.
             //die needs only clean this callback up
             _this.on(event_name, event_callback, _this);
+            var die;
+            die = function(dselectors, dcallback, dcontext) {
+                if( dselectors === selectors && 
+                    dcallback === callback && 
+                    dcontext === context
+                ) {
+                    call_for_matching(function(value) {
+                        value.die(rest, dcallback, dcontext)
+                    });
+                    console.log('matching!');
+                }
+                this.off(event_name, event_callback, this);
+                this.off('backbrace:die:' + selectors, die, this);
+            }
+            _this.on('backbrace:die:' + selectors, die, _this);
         },
 
-        die: function(selectors, callback, context) {
-
+        die: function(dselectors, dcallback, dcontext) {
+            this.trigger('backbrace:die:' + dselectors, dselectors, dcallback, dcontext);
         }
     });
 
@@ -95,18 +120,21 @@
             var rest = remaining_selector(selectors);
 
             var intermediate = _.bind(intermediate_callback, this, rest, callback, context, matching);
-            if(first === '*') {
-                _.each(_this.toJSON(), intermediate);
-            } else if(_this.has(first)) {
-                intermediate(_this.get(first));
+            var call_for_matching = function(fn) {
+                if(first === '*') {
+                    _.each(_this.toJSON(), fn);
+                } else if(_this.has(first)) {
+                    fn(_this.get(first), first);
+                }
             }
+            call_for_matching(intermediate);
 
             var event_name, event_callback;
             if(first === '*') {
                 event_name = 'change';
                 event_callback = function() {
                     _.each(_this.changedAttributes(), function(value, key) {
-                        if(typeof _this.previous(key) === 'undefined') 
+                        if(typeof _this.previous(key) === 'undefined')
                             intermediate(value);
                     });
                 }
@@ -122,12 +150,27 @@
             }
 
             //this is the only bound event on the object.
-            //die needs only clean this callback up
+            //die needs only ca lean this callback up
             _this.on(event_name, event_callback, _this);
+            var die;
+            die = function(dselectors, dcallback, dcontext) {
+                if( dselectors === selectors && 
+                    dcallback === callback && 
+                    dcontext === context
+                ) {
+                    call_for_matching(function(value) {
+                        value.die(rest, dcallback, dcontext)
+                    });
+                    console.log('matching!');
+                }
+                this.off(event_name, event_callback, this);
+                this.off('backbrace:die:' + selectors, die, this);
+            }
+            _this.on('backbrace:die:' + selectors, die, _this);
         },
 
-        die: function(selectors, callback, context) {
-
+        die: function(dselectors, dcallback, dcontext) {
+            this.trigger('backbrace:die:' + dselectors, dselectors, dcallback, dcontext);
         }
     });
 }).call(this);
