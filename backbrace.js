@@ -18,7 +18,7 @@
         var remaining = null;
         if(tokens.length > 1) {
             remaining = _.chain(tokens).rest().reduce(function(memo, token) {
-                return memo ? memo + ' ' + token : token;
+                return memo ? memo + DELIMITER + token : token;
             }).value();
         }
         return remaining;        
