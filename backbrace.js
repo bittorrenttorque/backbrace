@@ -51,6 +51,54 @@
         !rest && callback.apply(context, extend_array(matching, child));
     }
 
+    /**
+        @param call_for_matching - will call the function on each child element that matches the selector provided
+        @param event_name - the event name passed to 'on'. used to remove that event handler via 'off'
+        @param event_callback - the callback passed to 'on'. used to remove that event handler via 'off'
+        @param selectors - the event selector for the event handler that we are responsible for relieving
+        @param callback - the callback that we are responsible for relieving
+        @param context - the context of the callback that we are responsible for relieving
+        @param matching - the collection of previously matched values. used in this context to determine where we are in the object tree
+    **/
+    function attach_die_handler(call_for_matching, event_name, event_callback, selectors, callback, context, matching) {
+        var _this, die;
+
+        _this = this;
+        die = function(dselectors, dcallback, dcontext, dmatching) {
+            var rest;
+            if( dselectors === selectors && 
+                dcallback === callback && 
+                dcontext === context &&
+                arrays_equal(dmatching, matching)
+            ) {
+                rest = remaining_selector(selectors);
+                call_for_matching(function(value) {
+                    value.die(rest, dcallback, dcontext, extend_array(dmatching, value));
+                });
+                _this.off(event_name, event_callback, _this);
+                _this.off('backbrace:die:' + selectors, die, _this);
+            }
+        }
+        _this.on('backbrace:die:' + selectors, die, _this);
+    }
+
+    /**
+        Leaves the burdon on the live call to set up an event handler for our die event. Unless 
+        we want to figure out exactly what event that we used to listen for the next level of 
+        matching elements, we should let that be handled in the same context that it was originally set
+
+        @param dselectors - the selector string that should match the one sent to live
+        @param dcallback - the callback function that should match the one sent to live
+        @param dcontext - the context that should match the one sent to live
+        @param dmatching - the elements that have matches so far...used if we're being called as a result of die being called on our parent
+    **/
+    var die = function(dselectors, dcallback, dcontext, dmatching) {
+        this.trigger('backbrace:die:' + dselectors, dselectors, dcallback, dcontext, dmatching);
+    };
+
+    _.extend(Backbone.Collection.prototype, { die: die });
+    _.extend(Backbone.Model.prototype, { die: die });
+
     _.extend(Backbone.Collection.prototype, {
         /**
             @param selectors - a space delimited string of attribute keys/model ids to match
@@ -61,12 +109,14 @@
             @param matching - not for external use...it is used to collect the callback arguments
         **/
         live: function(selectors, callback, context, matching) {
-            var _this = this;
-            var first = initial_selector(selectors);
-            var rest = remaining_selector(selectors);
+            var _this, first, rest, intermediate, call_for_matching, event_name, event_callback;
 
-            var intermediate = _.bind(intermediate_callback, this, rest, callback, context, matching);
-            var call_for_matching = function(fn) {
+            _this = this;
+            first = initial_selector(selectors);
+            rest = remaining_selector(selectors);
+
+            intermediate = _.bind(intermediate_callback, this, rest, callback, context, matching);
+            call_for_matching = function(fn) {
                 if(first === '*') {
                     _this.each(fn);
                 } else if(_this.get(first)) {
@@ -75,42 +125,15 @@
             }
             call_for_matching(intermediate);
 
-            var event_name, event_callback;
-            if(first === '*') {
-                event_name = 'add';
-                event_callback = intermediate;
-            } else {
-                event_name = 'add';
-                event_callback = function(model) {
-                    if(model.id === first) {
-                        intermediate(model);
-                    }
-                };
-            }
-
-            //this is the only bound event on the object.
-            //die needs only clean this callback up
-            _this.on(event_name, event_callback, _this);
-            var die;
-            die = function(dselectors, dcallback, dcontext, dmatching) {
-                if( dselectors === selectors && 
-                    dcallback === callback && 
-                    dcontext === context &&
-                    arrays_equal(dmatching, matching)
-                ) {
-                    console.log(dmatching, matching);
-                    call_for_matching(function(value) {
-                        value.die(rest, dcallback, dcontext, extend_array(dmatching, value))
-                    });
-                    this.off(event_name, event_callback, this);
-                    this.off('backbrace:die:' + selectors, die, this);
+            event_name = 'add';
+            event_callback = first === '*' ? intermediate : function(model) {
+                if(model.id === first) {
+                    intermediate(model);
                 }
-            }
-            _this.on('backbrace:die:' + selectors, die, _this);
-        },
+            };
 
-        die: function(dselectors, dcallback, dcontext, dmatching) {
-            this.trigger('backbrace:die:' + dselectors, dselectors, dcallback, dcontext, dmatching);
+            _this.on(event_name, event_callback, _this);
+            attach_die_handler.call(_this, call_for_matching, event_name, event_callback, selectors, callback, context, matching);
         }
     });
 
@@ -124,12 +147,14 @@
             @param matching - not for external use...it is used to collect the callback arguments
         **/
         live: function(selectors, callback, context, matching) {
-            var _this = this;
-            var first = initial_selector(selectors);
-            var rest = remaining_selector(selectors);
+            var _this, first, rest, intermediate, call_for_matching, event_name, event_callback;
 
-            var intermediate = _.bind(intermediate_callback, this, rest, callback, context, matching);
-            var call_for_matching = function(fn) {
+            _this = this;
+            first = initial_selector(selectors);
+            rest = remaining_selector(selectors);
+
+            intermediate = _.bind(intermediate_callback, this, rest, callback, context, matching);
+            call_for_matching = function(fn) {
                 if(first === '*') {
                     _.each(_this.toJSON(), fn);
                 } else if(_this.has(first)) {
@@ -138,7 +163,6 @@
             }
             call_for_matching(intermediate);
 
-            var event_name, event_callback;
             if(first === '*') {
                 event_name = 'change';
                 event_callback = function() {
@@ -150,37 +174,17 @@
             } else {
                 event_name = 'change:' + first;
                 event_callback = function() {
+                    var value;
                     if(typeof _this.previous(first) === 'undefined') {
                         //we have a new attribute!
-                        var value = _this.get(first);
+                        value = _this.get(first);
                         intermediate(value);
                     }
                 }
             }
 
-            //this is the only bound event on the object.
-            //die needs only clean this callback up
             _this.on(event_name, event_callback, _this);
-            var die;
-            die = function(dselectors, dcallback, dcontext, dmatching) {
-                if( dselectors === selectors && 
-                    dcallback === callback && 
-                    dcontext === context &&
-                    arrays_equal(dmatching, matching)
-                ) {
-                    console.log(dmatching, matching);
-                    call_for_matching(function(value) {
-                        value.die(rest, dcallback, dcontext, extend_array(dmatching, value));
-                    });
-                    this.off(event_name, event_callback, this);
-                    this.off('backbrace:die:' + selectors, die, this);
-                }
-            }
-            _this.on('backbrace:die:' + selectors, die, _this);
-        },
-
-        die: function(dselectors, dcallback, dcontext, dmatching) {
-            this.trigger('backbrace:die:' + dselectors, dselectors, dcallback, dcontext, dmatching);
+            attach_die_handler.call(_this, call_for_matching, event_name, event_callback, selectors, callback, context, matching);
         }
     });
 }).call(this);
