@@ -40,6 +40,10 @@
         return true;
     }
     /**
+        This is the callback that will be called at every level of matching elements. It will then check if an addition
+        level of iterating and event binding is necessary, or if we match the final selector and can simply call the
+        originally specified callback
+
         @param tokens - the attribute keys/model ids to match
         @param callback - the final callback that the user provided
         @param context - the context to be provided for the user provided callback
@@ -52,6 +56,9 @@
     }
 
     /**
+        When we set up all the on event handlers, we have all the context necessary to undo our changes, so lets
+        set it up so a single simple event triggered from the die call can undo everything.
+
         @param call_for_matching - will call the function on each child element that matches the selector provided
         @param event_name - the event name passed to 'on'. used to remove that event handler via 'off'
         @param event_callback - the callback passed to 'on'. used to remove that event handler via 'off'
