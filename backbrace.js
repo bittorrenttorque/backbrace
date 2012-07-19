@@ -110,6 +110,7 @@
     **/
     var die = function(dselectors, dcallback, dcontext, dmatching) {
         this.trigger('backbrace:die:' + dselectors, dselectors, dcallback, dcontext, dmatching);
+        return this;
     };
 
     _.extend(Backbone.Collection.prototype, { die: die });
@@ -150,6 +151,7 @@
 
             _this.on(event_name, event_callback, _this);
             attach_die_handler.call(_this, call_for_matching, event_name, event_callback, selectors, callback, context, matching);
+            return _this;
         }
     });
 
@@ -202,6 +204,7 @@
 
             _this.on(event_name, event_callback, _this);
             attach_die_handler.call(_this, call_for_matching, event_name, event_callback, selectors, callback, context, matching);
+            return _this;
         }
     });
 }).call(this);
