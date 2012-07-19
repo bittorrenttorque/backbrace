@@ -1,9 +1,9 @@
-// Backbrace.js 0.1.0
+// Backbrace.js 0.2.0
 
 // (c) 2012 Patrick Williams
 // Backbrace may be freely distributed under the MIT license.
 // For all details and documentation:
-// http://pwmckenna.github.com/backbrace
+// http://github.com/bittorrenttorque/backbrace
 
 (function() {
     var DELIMITER = ' ';
@@ -14,14 +14,15 @@
     }
 
     function remaining_selector(selectors) {
-        var tokens = selectors.split(DELIMITER);
-        var remaining = null;
-        if(tokens.length > 1) {
+        var tokens, remaining;
+        tokens = selectors.split(DELIMITER);
+        remaining = null;
+        if (tokens.length > 1) {
             remaining = _.chain(tokens).rest().reduce(function(memo, token) {
                 return memo ? memo + DELIMITER + token : token;
             }).value();
         }
-        return remaining;        
+        return remaining;
     }
 
     function extend_array(matching, child) {
@@ -31,11 +32,16 @@
     }
 
     function arrays_equal(a, b) {
-        var c = a || [];
-        var d = b || [];
-        if(c.length !== d.length) return false;
-        for(var i = 0; i < c.length && i < d.length; i++) {
-            if(c[i] !== d[i]) return false;
+        var c, d, i;
+        c = a || [];
+        d = b || [];
+        if (c.length !== d.length) {
+            return false;
+        }
+        for (i = 0; i < c.length && i < d.length; i++) {
+            if(c[i] !== d[i]) {
+                return false;
+            }
         }
         return true;
     }
@@ -51,8 +57,11 @@
         @param child - the value that matched our previous "first" key
     **/
     function intermediate_callback(rest, callback, context, matching, child) {
-        rest && child && typeof child.live !== 'undefined' && child.live(rest, callback, context, extend_array(matching, child));
-        !rest && callback.apply(context, extend_array(matching, child));
+        if(rest && child && typeof child.live !== 'undefined') {
+            child.live(rest, callback, context, extend_array(matching, child));
+        } else if(!rest) {
+            callback.apply(context, extend_array(matching, child));
+        }
     }
 
     /**
@@ -85,7 +94,7 @@
                 _this.off(event_name, event_callback, _this);
                 _this.off('backbrace:die:' + selectors, die, _this);
             }
-        }
+        };
         _this.on('backbrace:die:' + selectors, die, _this);
     }
 
@@ -129,7 +138,7 @@
                 } else if(_this.get(first)) {
                     fn(_this.get(first));
                 }
-            }
+            };
             call_for_matching(intermediate);
 
             event_name = 'add';
@@ -167,17 +176,18 @@
                 } else if(_this.has(first)) {
                     fn(_this.get(first), first);
                 }
-            }
+            };
             call_for_matching(intermediate);
 
             if(first === '*') {
                 event_name = 'change';
                 event_callback = function() {
                     _.each(_this.changedAttributes(), function(value, key) {
-                        if(typeof _this.previous(key) === 'undefined')
+                        if(typeof _this.previous(key) === 'undefined') {
                             intermediate(value);
+                        }
                     });
-                }
+                };
             } else {
                 event_name = 'change:' + first;
                 event_callback = function() {
@@ -187,7 +197,7 @@
                         value = _this.get(first);
                         intermediate(value);
                     }
-                }
+                };
             }
 
             _this.on(event_name, event_callback, _this);
