@@ -314,7 +314,6 @@
 					var model = new Backbone.Model;
 					var selectors = 'a b c d';
 					model.live(selectors, spy, context);
-					model.on('all', console.log, console);
 
 					var a = new Backbone.Collection;
 					var b = new Backbone.Model({id: 'b'});
