@@ -129,6 +129,7 @@ To run the test suite yourself, open *spec/SpecRunner.html* in a browser.
 ## Todo
 - Support idAttribute
 - Support id changes
+- Look into complicated partial tree detatches, then re-adding
 
 ## Feedback
 I'd love feedback. [@pwmckenna](https://twitter.com/#!/pwmckenna)
