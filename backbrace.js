@@ -39,6 +39,7 @@
             _delimiter = d;
         },
         setWildcard: function(w) {
+            assert(w !== ',', 'cannot use , as a wildcard as it will prevent event callbacks from being set properly');
             assert(this.isClean(), 'setting the wildcard after calling live can cause unexpected behavior');
             assert(w !== _delimiter, 'setting the wildcard to the same value as the delimiter can cause unexpected behavior');
             _wildcard = w;
