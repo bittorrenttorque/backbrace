@@ -106,9 +106,19 @@ model.get('a').add(new Backbone.Model({id: 'c'}));
 By default, model id/attribute keys are seperated by spaces. Unfortunately those can legally exist in those
 variables, so to split up your tokens by a custom delimiter (that you hopefully are sure does not exist in your model ids or attribute keys), use the following functionality.
 ```js
-Backbrace.setDelimiter(',');
+Backbrace.setDelimiter('@');
 ```
-__Note:__ You must call this before using live/die to avoid unpredictable behavior. You can also technically do this after making all the corresponding die calls, but this is error prone and not advised.
+__Note:__ You must call this before using live/die to avoid unpredictable behavior. You can also technically do this after making all the corresponding die calls, but this is error prone and not advised.  
+__Forbidden Values:__ ',' and the character set as your wildcard (by default '*')
+
+## Wildcard
+The wildcard (*) suffers from the same problem as the delimiter, in that it can be a valid model id or attribute key.
+```js
+Backbrace.setWildcard('%');
+```
+
+__Note:__ You must call this before using live/die to avoid unpredictable behavior. You can also technically do this after making all the corresponding die calls, but this is error prone and not advised.  
+__Forbidden Values:__ ',' and the character set as your delimiter (by default ' ')
 
 ## Testing
 Tests are written using [jasmine](https://github.com/pivotal/jasmine).  
