@@ -6,20 +6,60 @@
 // http://github.com/bittorrenttorque/backbrace
 
 (function() {
-    var DELIMITER = ' ';
+    function assert(condition, error) { 
+        if(!condition) {
+            throw error; 
+        }
+    }
+    /**
+        Make the default delimiter ' ', but make it possible to change using
+        the function "setDelimiter", which is publicly available, so that it can be
+        changed. This will help alleviate the issues with spaces, which are
+        legal characters in attribute keys and model ids.
+    **/
+    var _delimiter = ' ';
+    /**
+        The same problem with * being a valid character in model ids and attribute keys
+        applies here. So we need to make this adjustable in case the user finds themself
+        trying to use Backbrace in the presence of * characters.
+    **/
+    var _wildcard = '*';
+    /**
+        Do some internal bookkeeping that will help us ensure that we never leave danging event handlers 
+    **/
+    var _on_count = 0;
+    var _live_count = 0;
+
+    this.Backbrace = {
+        setDelimiter: function(d) {
+            // Sending ',' into .on() calls would mean something very different than we intent.
+            assert(d !== ',', 'cannot use , as a delimiter as it will prevent event callbacks from being set properly');
+            assert(this.isClean(), 'setting the delimiter after calling live can cause unexpected behavior');
+            assert(d !== _wildcard, 'setting the delimiter to the same value as the wildcard can cause unexpected behavior');
+            _delimiter = d;
+        },
+        setWildcard: function(w) {
+            assert(this.isClean(), 'setting the wildcard after calling live can cause unexpected behavior');
+            assert(w !== _delimiter, 'setting the wildcard to the same value as the delimiter can cause unexpected behavior');
+            _wildcard = w;
+        },
+        isClean: function() {
+            return _on_count === 0 && _live_count === 0;
+        }
+    };
 
     function initial_selector(selectors) {
-        var tokens = selectors.split(DELIMITER);
+        var tokens = selectors.split(_delimiter);
         return _.first(tokens);
     }
 
     function remaining_selector(selectors) {
         var tokens, remaining;
-        tokens = selectors.split(DELIMITER);
+        tokens = selectors.split(_delimiter);
         remaining = null;
         if (tokens.length > 1) {
             remaining = _.chain(tokens).rest().reduce(function(memo, token) {
-                return memo ? memo + DELIMITER + token : token;
+                return memo ? memo + _delimiter + token : token;
             }).value();
         }
         return remaining;
@@ -88,14 +128,24 @@
                 arrays_equal(dmatching, matching)
             ) {
                 rest = remaining_selector(selectors);
-                call_for_matching(function(value) {
-                    value.die(rest, dcallback, dcontext, extend_array(dmatching, value));
-                });
+                if(rest) {
+                    call_for_matching(function(value) {
+                        if(typeof value.die === 'function') {
+                            value.die(rest, dcallback, dcontext, extend_array(dmatching, value));
+                        }
+                    });
+                }
                 _this.off(event_name, event_callback, _this);
+                _on_count--;
+                console.log('off(' + event_name + ') - ' + _on_count + '/' + _live_count);
                 _this.off('backbrace:die:' + selectors, die, _this);
+                _on_count--;
+                console.log('off(backbrace:die:' + selectors + ') - ' + _on_count + '/' + _live_count);
             }
         };
         _this.on('backbrace:die:' + selectors, die, _this);
+        _on_count++;
+        console.log('on(backbrace:die:' + selectors + ') - ' + _on_count + '/' + _live_count);
     }
 
     /**
@@ -110,6 +160,11 @@
     **/
     var die = function(dselectors, dcallback, dcontext, dmatching) {
         this.trigger('backbrace:die:' + dselectors, dselectors, dcallback, dcontext, dmatching);
+
+        _live_count--;
+        if(dselectors === null) debugger;
+        console.log('die(' + dselectors + ') - ' + _on_count + '/' + _live_count);
+
         return this;
     };
 
@@ -128,13 +183,16 @@
         live: function(selectors, callback, context, matching) {
             var _this, first, rest, intermediate, call_for_matching, event_name, event_callback;
 
+            _live_count++;
+            console.log('live(' + selectors + ') - ' + _on_count + '/' + _live_count);
+
             _this = this;
             first = initial_selector(selectors);
             rest = remaining_selector(selectors);
 
             intermediate = _.bind(intermediate_callback, this, rest, callback, context, matching);
             call_for_matching = function(fn) {
-                if(first === '*') {
+                if(first === _wildcard) {
                     _this.each(fn);
                 } else if(_this.get(first)) {
                     fn(_this.get(first));
@@ -143,13 +201,16 @@
             call_for_matching(intermediate);
 
             event_name = 'add';
-            event_callback = first === '*' ? intermediate : function(model) {
+            event_callback = first === _wildcard ? intermediate : function(model) {
                 if(model.id === first) {
                     intermediate(model);
                 }
             };
 
             _this.on(event_name, event_callback, _this);
+            _on_count++;
+            console.log('on(' + event_name + ') - ' + _on_count + '/' + _live_count);
+           
             attach_die_handler.call(_this, call_for_matching, event_name, event_callback, selectors, callback, context, matching);
             return _this;
         }
@@ -167,13 +228,16 @@
         live: function(selectors, callback, context, matching) {
             var _this, first, rest, intermediate, call_for_matching, event_name, event_callback;
 
+            _live_count++;
+            console.log('live(' + selectors + ') - ' + _on_count + '/' + _live_count);
+
             _this = this;
             first = initial_selector(selectors);
             rest = remaining_selector(selectors);
 
             intermediate = _.bind(intermediate_callback, this, rest, callback, context, matching);
             call_for_matching = function(fn) {
-                if(first === '*') {
+                if(first === _wildcard) {
                     _.each(_this.toJSON(), fn);
                 } else if(_this.has(first)) {
                     fn(_this.get(first), first);
@@ -181,7 +245,7 @@
             };
             call_for_matching(intermediate);
 
-            if(first === '*') {
+            if(first === _wildcard) {
                 event_name = 'change';
                 event_callback = function() {
                     _.each(_this.changedAttributes(), function(value, key) {
@@ -203,6 +267,8 @@
             }
 
             _this.on(event_name, event_callback, _this);
+            _on_count++;
+            console.log('on(' + event_name + ') - ' + _on_count + '/' + _live_count);
             attach_die_handler.call(_this, call_for_matching, event_name, event_callback, selectors, callback, context, matching);
             return _this;
         }
