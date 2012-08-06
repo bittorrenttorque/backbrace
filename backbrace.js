@@ -138,15 +138,12 @@
                 }
                 _this.off(event_name, event_callback, _this);
                 _on_count--;
-                console.log('off(' + event_name + ') - ' + _on_count + '/' + _live_count);
                 _this.off('backbrace:die:' + selectors, die, _this);
                 _on_count--;
-                console.log('off(backbrace:die:' + selectors + ') - ' + _on_count + '/' + _live_count);
             }
         };
         _this.on('backbrace:die:' + selectors, die, _this);
         _on_count++;
-        console.log('on(backbrace:die:' + selectors + ') - ' + _on_count + '/' + _live_count);
     }
 
     /**
@@ -163,9 +160,6 @@
         this.trigger('backbrace:die:' + dselectors, dselectors, dcallback, dcontext, dmatching);
 
         _live_count--;
-        if(dselectors === null) debugger;
-        console.log('die(' + dselectors + ') - ' + _on_count + '/' + _live_count);
-
         return this;
     };
 
@@ -185,7 +179,6 @@
             var _this, first, rest, intermediate, call_for_matching, event_name, event_callback;
 
             _live_count++;
-            console.log('live(' + selectors + ') - ' + _on_count + '/' + _live_count);
 
             _this = this;
             first = initial_selector(selectors);
@@ -210,7 +203,6 @@
 
             _this.on(event_name, event_callback, _this);
             _on_count++;
-            console.log('on(' + event_name + ') - ' + _on_count + '/' + _live_count);
            
             attach_die_handler.call(_this, call_for_matching, event_name, event_callback, selectors, callback, context, matching);
             return _this;
@@ -230,7 +222,6 @@
             var _this, first, rest, intermediate, call_for_matching, event_name, event_callback;
 
             _live_count++;
-            console.log('live(' + selectors + ') - ' + _on_count + '/' + _live_count);
 
             _this = this;
             first = initial_selector(selectors);
@@ -269,7 +260,6 @@
 
             _this.on(event_name, event_callback, _this);
             _on_count++;
-            console.log('on(' + event_name + ') - ' + _on_count + '/' + _live_count);
             attach_die_handler.call(_this, call_for_matching, event_name, event_callback, selectors, callback, context, matching);
             return _this;
         }
