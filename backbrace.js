@@ -50,23 +50,31 @@
     };
 
     function initial_selector(selectors) {
+        assert(_.isString(selectors), 'initial_selector takes a single argument');
         var tokens = selectors.split(_delimiter);
-        return _.first(tokens);
+        assert(_.isArray(tokens));
+        var ret = _.first(tokens);
+        assert(_.isString(ret), 'initial_selector should return a string');
+        return ret;
     }
 
     function remaining_selector(selectors) {
+        assert(_.isString(selectors));
         var tokens, remaining;
         tokens = selectors.split(_delimiter);
+        assert(_.isArray(tokens));
         remaining = null;
         if (tokens.length > 1) {
             remaining = _.chain(tokens).rest().reduce(function(memo, token) {
                 return memo ? memo + _delimiter + token : token;
             }).value();
+            assert(_.isString(remaining));
         }
         return remaining;
     }
 
     function extend_array(matching, child) {
+        assert(_.toString(child));
         var m = _.clone(matching || []);
         m.unshift(child);
         return m;
@@ -98,7 +106,9 @@
         @param child - the value that matched our previous "first" key
     **/
     function intermediate_callback(rest, callback, context, matching, child) {
-        if(rest && child && typeof child.live !== 'undefined') {
+        assert(_.isNull(rest) || _.isString(rest));
+        assert(_.isFunction(callback));
+        if(rest && child && !_.isUndefined(child.live)) {
             child.live(rest, callback, context, extend_array(matching, child));
         } else if(!rest) {
             callback.apply(context, extend_array(matching, child));
@@ -119,6 +129,13 @@
     **/
     function attach_die_handler(call_for_matching, event_name, event_callback, selectors, callback, context, matching) {
         var _this, die;
+
+        assert(_.isFunction(call_for_matching));
+        assert(_.isString(event_name));
+        assert(_.isFunction(event_callback));
+        assert(_.isString(selectors));
+        assert(_.isFunction(callback));
+
 
         _this = this;
         die = function(dselectors, dcallback, dcontext, dmatching) {
@@ -157,6 +174,8 @@
         @param dmatching - the elements that have matches so far...used if we're being called as a result of die being called on our parent
     **/
     var die = function(dselectors, dcallback, dcontext, dmatching) {
+        assert(_.isString(dselectors));
+        assert(_.isFunction(dcallback));
         this.trigger('backbrace:die:' + dselectors, dselectors, dcallback, dcontext, dmatching);
 
         _live_count--;
@@ -176,6 +195,9 @@
             @param matching - not for external use...it is used to collect the callback arguments
         **/
         live: function(selectors, callback, context, matching) {
+            assert(_.isString(selectors));
+            assert(_.isFunction(callback));
+
             var _this, first, rest, intermediate, call_for_matching, event_name, event_callback;
 
             _live_count++;
@@ -183,6 +205,10 @@
             _this = this;
             first = initial_selector(selectors);
             rest = remaining_selector(selectors);
+
+            assert(_.isString(first));
+            assert(_.isNull(rest) || _.isString(rest));
+
 
             intermediate = _.bind(intermediate_callback, this, rest, callback, context, matching);
             call_for_matching = function(fn) {
