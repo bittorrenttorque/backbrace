@@ -148,7 +148,7 @@
                 rest = remaining_selector(selectors);
                 if(rest) {
                     call_for_matching(function(value) {
-                        if(typeof value.die === 'function') {
+                        if(_.isFunction(value.die)) {
                             value.die(rest, dcallback, dcontext, extend_array(dmatching, value));
                         }
                     });
@@ -267,7 +267,7 @@
                 event_name = 'change';
                 event_callback = function() {
                     _.each(_this.changedAttributes(), function(value, key) {
-                        if(typeof _this.previous(key) === 'undefined') {
+                        if(_.isUndefined(_this.previous(key))) {
                             intermediate(value);
                         }
                     });
@@ -276,7 +276,7 @@
                 event_name = 'change:' + first;
                 event_callback = function() {
                     var value;
-                    if(typeof _this.previous(first) === 'undefined') {
+                    if(_.isUndefined(_this.previous(first))) {
                         //we have a new attribute!
                         value = _this.get(first);
                         intermediate(value);
