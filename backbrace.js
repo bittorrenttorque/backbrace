@@ -1,4 +1,4 @@
-// Backbrace.js 0.2.0
+// Backbrace.js 0.3.0
 
 // (c) 2012 Patrick Williams
 // Backbrace may be freely distributed under the MIT license.

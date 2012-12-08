@@ -1,0 +1,12 @@
+{
+    "name": "backbrace.js",
+    "version": "0.3.0",
+    "dependencies": [
+        "bower",
+        "grunt",
+        "grunt-jasmine-runner"
+    ],
+    "scripts": {
+       "test": "grunt jasmine"
+    }
+}
