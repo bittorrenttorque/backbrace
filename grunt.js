@@ -51,18 +51,22 @@ module.exports = function(grunt) {
         boss: true,
         eqnull: true,
         node: true,
-        es5: true
+        es5: true,
+        validthis:true
       },
       globals: {
         jasmine : false,
         describe : false,
         beforeEach : false,
+        afterEach: false,
         waitsFor: false,
         runs: false,
         expect : false,
         it : false,
         spyOn : false,
-        _: true
+        _: true,
+        Backbone: false,
+        Backbrace: false
       }
     }
   });

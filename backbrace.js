@@ -6,6 +6,7 @@
 // http://github.com/bittorrenttorque/backbrace
 
 (function() {
+    "use strict";
     function assert(condition, error) { 
         if(!condition) {
             throw error; 
