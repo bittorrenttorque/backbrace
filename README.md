@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/bittorrenttorque/backbrace.png?branch=master)](https://travis-ci.org/bittorrenttorque/backbrace)
+
 # Backbrace.js
 
 ## Why?
@@ -119,12 +121,6 @@ Backbrace.setWildcard('%');
 
 __Note:__ You must call this before using live/die to avoid unpredictable behavior. You can also technically do this after making all the corresponding die calls, but this is error prone and not advised.  
 __Forbidden Values:__ ',' and the character set as your delimiter (by default ' ')
-
-## Testing
-Tests are written using [jasmine](https://github.com/pivotal/jasmine).  
-Continuous Integration provided by [Travis CI](http://travis-ci.org/#!/pwmckenna/backbrace)...Thanks guys!  
-To run the test suite yourself, open *spec/SpecRunner.html* in a browser.  
-
 
 ## Todo
 - Support idAttribute
